@@ -18,9 +18,14 @@ public class App : Application
         {
             desktop.MainWindow = new MainWindow();
 
-            desktop.ShutdownRequested += (sender, args) => { args.Cancel = true; };
-
-            desktop.MainWindow.Show();
+            desktop.ShutdownRequested += (_, args) =>
+            {
+                // On Windows, this prevents the app shutting down when closing the window with the title
+                // bar 'x' button, `Alt` + `F4`, and the context menu for the app from the task bar.
+                // On macOS, this prevents the app shutting down when closing the window with the red window button,
+                // and when closing the app with the menu bar or context menu for the app from the dock.
+                args.Cancel = true;
+            };
         }
 
         base.OnFrameworkInitializationCompleted();
