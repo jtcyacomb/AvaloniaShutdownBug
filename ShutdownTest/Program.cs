@@ -2,6 +2,7 @@
 using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 
 namespace ShutdownTest;
 
@@ -10,9 +11,14 @@ internal class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        BuildAvaloniaApp().SetupWithClassicDesktopLifetime(args).Instance?.Run(CancellationToken.None);
+        var instance = BuildAvaloniaApp().SetupWithClassicDesktopLifetime(args).Instance;
 
-        //BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        if (instance?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            desktop.MainWindow?.Show();
+        }
+
+        instance?.Run(CancellationToken.None);
     }
 
     public static AppBuilder BuildAvaloniaApp()
